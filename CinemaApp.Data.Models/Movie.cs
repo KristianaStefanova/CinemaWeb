@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-
-namespace CinemaApp.Data.Models
+﻿namespace CinemaApp.Data.Models
 {
+    using Microsoft.EntityFrameworkCore;
+
     [Comment("Movie in the system")]
     public class Movie
     {
@@ -34,10 +29,12 @@ namespace CinemaApp.Data.Models
         [Comment("Movie image url from the image store")]
         public string? ImageUrl { get; set; }
 
+        // TODO: Extract the property with Id to BaseDeletableModel
         [Comment("Shows if movie is deleted")]
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<ApplicationUserMovie> UserWatchlists { get; set; }
-           = new HashSet<ApplicationUserMovie>();
+            = new HashSet<ApplicationUserMovie>();
+
     }
 }

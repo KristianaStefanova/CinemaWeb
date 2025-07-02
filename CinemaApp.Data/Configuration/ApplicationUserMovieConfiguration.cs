@@ -10,27 +10,27 @@ namespace CinemaApp.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<ApplicationUserMovie> entity)
         {
-            // Define composite Primary Key of the mapping entity
-            entity.HasKey(aum => new { aum.ApplicationUserId, aum.MovieId });
+            // Define composite Primary Key of the Mapping Entity
+            entity
+                .HasKey(aum => new { aum.ApplicationUserId, aum.MovieId });
 
-            // Define required constraintsfor the ApplicationUserId, as it is type string.
+            // Define required constraint for the ApplicationUserId, as it is type string
             entity
                 .Property(aum => aum.ApplicationUserId)
                 .IsRequired();
 
-            // Define defalt value for soft-delete functionality
+            // Define default value for soft-delete functionality
             entity
                 .Property(aum => aum.IsDeleted)
                 .HasDefaultValue(false);
 
             // Configure relation between ApplicationUserMovie and IdentityUser
-            // The IdentityUser does not contain navigation property, as it is build/in type from the ASP.NET Core Identity
+            // The IdentityUser does not contain navigation property, as it is built-in type from the ASP.NET Core Identity
             entity
                 .HasOne(aum => aum.ApplicationUser)
-                .WithMany()
+                .WithMany() // We do not have navigation property from the IdentityUser side
                 .HasForeignKey(aum => aum.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
 
             // Configure relation between ApplicationUserMovie and Movie
             entity
@@ -39,15 +39,14 @@ namespace CinemaApp.Data.Configuration
                 .HasForeignKey(aum => aum.MovieId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            // Definre query filter to hide the ApplicationUserMovie entries referring deleted Movie
+            // Define query filter to hide the ApplicationUserMovie entries referring deleted Movie
             // Solves the problem with relations during delete
             entity
                 .HasQueryFilter(aum => aum.Movie.IsDeleted == false);
 
             // Define query filter to hide the deleted entries in the user Watchlist
-            entity.
-                HasQueryFilter(aum => aum.IsDeleted == false);
+            entity
+                .HasQueryFilter(aum => aum.IsDeleted == false);
         }
     }
 }

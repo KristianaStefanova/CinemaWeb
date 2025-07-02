@@ -1,27 +1,27 @@
 ﻿namespace CinemaApp.Services.Core
 {
-    using Data;
+    using Microsoft.EntityFrameworkCore;
+
+    using Data.Models;
+    using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Watchlist;
     using static GCommon.ApplicationConstants;
 
-    using Microsoft.EntityFrameworkCore;
-    using CinemaApp.Data.Models;
-
     public class WatchlistService : IWatchlistService
     {
-        private readonly CinemaAppDbContext dbContext;
+        private readonly IWatchlistRepository watchlistRepository;
 
-        public WatchlistService(CinemaAppDbContext dbContext)
+        public WatchlistService(IWatchlistRepository watchlistRepository)
         {
-            this.dbContext = dbContext;
+            this.watchlistRepository = watchlistRepository;
         }
 
         public async Task<IEnumerable<WatchlistViewModel>> GetUserWatchlistAsync(string userId)
         {
-            // Due to the use of the uild-in IdentityUser, we do not have direct navigation collection from the user side.
-            IEnumerable<WatchlistViewModel> userWatchlist = await this.dbContext
-                .ApplicationUserMovies
+            // Due to the use of the built-in IdentityUser, we do not have direct navigation collection from the user side
+            IEnumerable<WatchlistViewModel> userWatchlist = await this.watchlistRepository
+                .GetAllAttached()
                 .Include(aum => aum.Movie)
                 .AsNoTracking()
                 .Where(aum => aum.ApplicationUserId.ToLower() == userId.ToLower())
@@ -31,7 +31,7 @@
                     Title = aum.Movie.Title,
                     Genre = aum.Movie.Genre,
                     ReleaseDate = aum.Movie.ReleaseDate.ToString(AppDateFormat),
-                    ImageUrl = aum.Movie.ImageUrl ?? $"/images/{NoImageUrl}",
+                    ImageUrl = aum.Movie.ImageUrl ?? $"/images/{NoImageUrl}"
                 })
                 .ToArrayAsync();
 
@@ -41,22 +41,21 @@
         public async Task<bool> AddMovieToUserWatchlistAsync(string? movieId, string? userId)
         {
             bool result = false;
-
-            if (movieId != null || userId != null)
+            if (movieId != null && userId != null)
             {
                 bool isMovieIdValid = Guid.TryParse(movieId, out Guid movieGuid);
-
-                if(isMovieIdValid)
+                if (isMovieIdValid)
                 {
-                    ApplicationUserMovie? userMovieEntry = await this.dbContext
-                        .ApplicationUserMovies
+                    ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
+                        .GetAllAttached()
                         .IgnoreQueryFilters()
                         .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
-                                              aum.MovieId.ToString() == movieGuid.ToString());
-
+                                                     aum.MovieId.ToString() == movieGuid.ToString());
                     if (userMovieEntry != null)
                     {
                         userMovieEntry.IsDeleted = false;
+                        result =
+                            await this.watchlistRepository.UpdateAsync(userMovieEntry);
                     }
                     else
                     {
@@ -66,68 +65,55 @@
                             MovieId = movieGuid,
                         };
 
-                        await this.dbContext.ApplicationUserMovies.AddAsync(userMovieEntry);
+                        await this.watchlistRepository.AddAsync(userMovieEntry);
+                        result = true;
                     }
-
-                    await this.dbContext.SaveChangesAsync();
-
-                    result = true;
                 }
             }
+
             return result;
         }
-
 
         public async Task<bool> RemoveMovieFromWatchlistAsync(string? movieId, string? userId)
         {
             bool result = false;
-
-            if (movieId != null || userId != null)
+            if (movieId != null && userId != null)
             {
                 bool isMovieIdValid = Guid.TryParse(movieId, out Guid movieGuid);
-
                 if (isMovieIdValid)
                 {
-                    ApplicationUserMovie? userMovieEntry = await this.dbContext
-                        .ApplicationUserMovies
+                    ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
                         .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
-                                              aum.MovieId.ToString() == movieGuid.ToString());
-
+                                                     aum.MovieId.ToString() == movieGuid.ToString());
                     if (userMovieEntry != null)
                     {
-                        userMovieEntry.IsDeleted = true;
+                        result =
+                            await this.watchlistRepository.DeleteAsync(userMovieEntry);
                     }
-
-                    await this.dbContext.SaveChangesAsync();
-
-                    result = true;
                 }
             }
+
             return result;
         }
 
         public async Task<bool> IsMovieAddedToWatchlist(string? movieId, string? userId)
         {
             bool result = false;
-
-            if (movieId != null || userId != null)
+            if (movieId != null && userId != null)
             {
                 bool isMovieIdValid = Guid.TryParse(movieId, out Guid movieGuid);
-
                 if (isMovieIdValid)
                 {
-                    ApplicationUserMovie? userMovieEntry = await this.dbContext
-                        .ApplicationUserMovies
+                    ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
                         .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
-                                              aum.MovieId.ToString() == movieGuid.ToString());
-
-                    if(userMovieEntry != null)
+                                                     aum.MovieId.ToString() == movieGuid.ToString());
+                    if (userMovieEntry != null)
                     {
                         result = true;
                     }
-
                 }
             }
+
             return result;
         }
     }

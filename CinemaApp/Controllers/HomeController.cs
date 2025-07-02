@@ -1,14 +1,17 @@
 namespace CinemaApp.Web.Controllers
 {
     using System.Diagnostics;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using ViewModels;
+
     public class HomeController : BaseController
     {
         public HomeController()
         {
+
         }
 
         [AllowAnonymous]
@@ -16,7 +19,6 @@ namespace CinemaApp.Web.Controllers
         {
             return View();
         }
-
 
         public IActionResult Privacy()
         {

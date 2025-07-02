@@ -25,15 +25,15 @@
         {
             IEnumerable<AllMoviesIndexViewModel> allMovies = await this.movieService
                 .GetAllMoviesAsync();
-
             if (this.IsUserAuthenticated())
             {
-                foreach (AllMoviesIndexViewModel movieIndexViewModel in allMovies)
+                foreach (AllMoviesIndexViewModel movieIndexVM in allMovies)
                 {
-                    movieIndexViewModel.IsAddedToUserWatchlist = await this.watchlistService
-                        .IsMovieAddedToWatchlist(movieIndexViewModel.Id, this.GetUserId());
+                    movieIndexVM.IsAddedToUserWatchlist = await this.watchlistService
+                        .IsMovieAddedToWatchlist(movieIndexVM.Id, this.GetUserId());
                 }
             }
+
             return View(allMovies);
         }
 
@@ -43,7 +43,6 @@
             return this.View();
         }
 
-        // Create post action
         [HttpPost]
         public async Task<IActionResult> Add(MovieFormInputModel inputModel)
         {
@@ -76,10 +75,9 @@
             {
                 MovieDetailsViewModel? movieDetails = await this.movieService
                     .GetMovieDetailsByIdAsync(id);
-
                 if (movieDetails == null)
                 {
-                    //TODO: Custom 404 page
+                    // TODO: Custom 404 page
                     return this.RedirectToAction(nameof(Index));
                 }
 
@@ -87,10 +85,10 @@
             }
             catch (Exception e)
             {
-                // TODO: Implement it with th ILogger
+                // TODO: Implement it with the ILogger
                 // TODO: Add JS bars to indicate such errors
-
                 Console.WriteLine(e.Message);
+
                 return this.RedirectToAction(nameof(Index));
             }
         }
@@ -101,10 +99,10 @@
             try
             {
                 MovieFormInputModel? editableMovie = await this.movieService
-                    .GetEditableMovieByAsync(id);
+                    .GetEditableMovieByIdAsync(id);
                 if (editableMovie == null)
                 {
-                    //TODO: Custom 404 page
+                    // TODO: Custom 404 page
                     return this.RedirectToAction(nameof(Index));
                 }
 
@@ -112,10 +110,10 @@
             }
             catch (Exception e)
             {
-                // TODO: Implement it with th ILogger
+                // TODO: Implement it with the ILogger
                 // TODO: Add JS bars to indicate such errors
-
                 Console.WriteLine(e.Message);
+
                 return this.RedirectToAction(nameof(Index));
             }
         }
@@ -131,8 +129,7 @@
             try
             {
                 bool editSuccess = await this.movieService.EditMovieAsync(inputModel);
-
-                if(!editSuccess)
+                if (!editSuccess)
                 {
                     // TODO: Custom 404 page
                     return this.RedirectToAction(nameof(Index));
@@ -142,10 +139,10 @@
             }
             catch (Exception e)
             {
-                // TODO: Implement it with th ILogger
+                // TODO: Implement it with the ILogger
                 // TODO: Add JS bars to indicate such errors
-
                 Console.WriteLine(e.Message);
+
                 return this.RedirectToAction(nameof(Index));
             }
         }
@@ -157,10 +154,9 @@
             {
                 DeleteMovieViewModel? movieToBeDeleted = await this.movieService
                     .GetMovieDeleteDetailsByIdAsync(id);
-
                 if (movieToBeDeleted == null)
                 {
-                    //TODO: Custom 404 page
+                    // TODO: Custom 404 page
                     return this.RedirectToAction(nameof(Index));
                 }
 
@@ -168,10 +164,10 @@
             }
             catch (Exception e)
             {
-                // TODO: Implement it with th ILogger
+                // TODO: Implement it with the ILogger
                 // TODO: Add JS bars to indicate such errors
-
                 Console.WriteLine(e.Message);
+
                 return this.RedirectToAction(nameof(Index));
             }
         }
@@ -179,18 +175,17 @@
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteMovieViewModel inputModel)
         {
-            if (!this.ModelState.IsValid)
-            {
-                // TODO: Implement JS notifications
-                return this.RedirectToAction(nameof(Index));
-            }
-
             try
             {
-                bool deletedResult = await this.movieService
-                    .SoftDeleteMovieAsync(inputModel.Id);
+                if (!this.ModelState.IsValid)
+                {
+                    // TODO: Implement JS notifications
+                    return this.RedirectToAction(nameof(Index));
+                }
 
-                if (!deletedResult)
+                bool deleteResult = await this.movieService
+                    .SoftDeleteMovieAsync(inputModel.Id);
+                if (deleteResult == false)
                 {
                     // TODO: Implement JS notifications
                     // TODO: Alt_Redirect to Not Found page
@@ -202,7 +197,7 @@
             }
             catch (Exception e)
             {
-                // TODO: Implement it with th ILogger
+                // TODO: Implement it with the ILogger
                 // TODO: Add JS bars to indicate such errors
                 Console.WriteLine(e.Message);
 

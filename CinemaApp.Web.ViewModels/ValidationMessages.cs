@@ -1,39 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CinemaApp.Web.ViewModels
+﻿namespace CinemaApp.Web.ViewModels
 {
     public static class ValidationMessages
     {
         public static class Movie
         {
-            public const string TitleRequiredMessage = "The title is required.";
-            public const string TitleMinLengthMessage = $"The title must be at least 1 character long.";
-            public const string TitleMaxLengthMessage = $"The title must not exceed ... characters.";
+            // Error messages
+            public const string TitleRequiredMessage = "Title is required.";
+            public const string TitleMinLengthMessage = "Title must be at least 2 characters.";
+            public const string TitleMaxLengthMessage = "Title cannot exceed 100 characters.";
 
-            public const string GenreRequiredMessage = "The genre is required.";
-            public const string GenreMinLengthMessage = $"The genre must be at least 1 character long.";
-            public const string GenreMaxLengthMessage = $"The genre must not exceed ... characters.";
+            public const string GenreRequiredMessage = "Genre is required.";
+            public const string GenreMinLengthMessage = "Genre must be at least 3 characters.";
+            public const string GenreMaxLengthMessage = "Genre cannot exceed 50 characters.";
 
-            public const string DirectorRequiredMessage = "The director is required.";
-            public const string DirectorMinLengthMessage = $"The director's name must be at least 1 character long.";
-            public const string DirectorMaxLengthMessage = $"The director's name must not exceed ... characters.";
+            public const string DirectorRequiredMessage = "Director is required.";
+            public const string DirectorNameMinLengthMessage = "Director name must be at least 2 characters.";
+            public const string DirectorNameMaxLengthMessage = "Director name cannot exceed 100 characters.";
 
-            public const string DescriptionRequiredMessage = "The description is required.";
-            public const string DescriptionMinLengthMessage = $"The description must be at least 10 character long.";
-            public const string DescriptionMaxLengthMessage = $"The description must not exceed ... characters.";
+            public const string DescriptionRequiredMessage = "Description is required.";
+            public const string DescriptionMinLengthMessage = "Description must be at least 10 characters.";
+            public const string DescriptionMaxLengthMessage = "Description cannot exceed 1000 characters.";
 
-            public const string DurationDateRequiredMessage = "The duration is required.";
-            public const string DurationRangeMessage = $"The duration must be between ... and ... minutes.";
+            public const string DurationRequiredMessage = "Duration is required.";
+            public const string DurationRangeMessage = "Duration must be between 1 and 300 minutes.";
 
-            public const string ReleaseDateRequiredMessage = "The release date is required.";
+            public const string ReleaseDateRequiredMessage = "Release date is required.";
 
-            public const string ImageUrlMaxLengthMessage = $"The image URL must not exceed ... characters.";
+            public const string ImageUrlMaxLengthMessage = "Image URL cannot exceed 2048 characters.";
 
-            public const string ServiceCreateError = "Fatal error occurred while adding your movie! Please try again later!";
+            public const string ServiceCreateError =
+                "Fatal error occurred while adding your movie! Please try again later!";
         }
     }
 }

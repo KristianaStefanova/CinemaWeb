@@ -278,7 +278,3 @@ namespace CinemaApp.Data.Configuration
         }
     }
 }
-
-
-
-

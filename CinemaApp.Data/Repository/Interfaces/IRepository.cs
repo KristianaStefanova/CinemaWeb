@@ -10,19 +10,19 @@ namespace CinemaApp.Data.Repository.Interfaces
     {
         TEntity? GetById(TKey id);
 
-        TEntity? SinglesOrDefault(Func<TEntity, bool> predicate);
+        TEntity? SingleOrDefault(Func<TEntity, bool> predicate);
 
         TEntity? FirstOrDefault(Func<TEntity, bool> predicate);
-        
+
         IEnumerable<TEntity> GetAll();
 
         int Count();
-        
+
         IQueryable<TEntity> GetAllAttached();
 
         void Add(TEntity item);
-        
-        void AddRange(IEnumerable<TEntity> items);   
+
+        void AddRange(IEnumerable<TEntity> items);
 
         bool Delete(TEntity entity);
 

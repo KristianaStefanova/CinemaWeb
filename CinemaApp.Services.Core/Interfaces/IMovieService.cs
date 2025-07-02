@@ -1,9 +1,7 @@
-﻿
-
-using CinemaApp.Web.ViewModels.Movie;
-
-namespace CinemaApp.Services.Core.Interfaces
+﻿namespace CinemaApp.Services.Core.Interfaces
 {
+    using Web.ViewModels.Movie;
+
     public interface IMovieService
     {
         Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesAsync();
@@ -12,16 +10,14 @@ namespace CinemaApp.Services.Core.Interfaces
 
         Task<MovieDetailsViewModel?> GetMovieDetailsByIdAsync(string? id);
 
-        Task<MovieFormInputModel?> GetEditableMovieByAsync(string? id);
+        Task<MovieFormInputModel?> GetEditableMovieByIdAsync(string? id);
 
         Task<bool> EditMovieAsync(MovieFormInputModel inputModel);
 
-        Task<DeleteMovieViewModel> GetMovieDeleteDetailsByIdAsync(string? id);
+        Task<DeleteMovieViewModel?> GetMovieDeleteDetailsByIdAsync(string? id);
 
         Task<bool> SoftDeleteMovieAsync(string? id);
 
         Task<bool> DeleteMovieAsync(string? id);
-
-        
     }
 }

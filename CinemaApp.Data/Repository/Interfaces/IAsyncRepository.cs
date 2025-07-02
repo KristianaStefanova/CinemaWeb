@@ -31,5 +31,4 @@ namespace CinemaApp.Data.Repository.Interfaces
 
         Task SaveChangesAsync();
     }
-    
 }

@@ -2,7 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
-    using CinemaApp.Services.Core.Interfaces;
+    using Services.Core.Interfaces;
     using ViewModels.Watchlist;
 
     public class WatchlistController : BaseController
@@ -27,7 +27,6 @@
 
                 IEnumerable<WatchlistViewModel> userWatchlist = await this.watchlistService
                     .GetUserWatchlistAsync(userId);
-
                 return View(userWatchlist);
             }
             catch (Exception e)
@@ -52,11 +51,10 @@
 
                 bool result = await this.watchlistService
                     .AddMovieToUserWatchlistAsync(movieId, userId);
-
-                if(result == false)
+                if (result == false)
                 {
-                    // Add JS notifications
-                    return RedirectToAction(nameof(Index), "Movie");
+                    // TODO: Add JS notifications
+                    return this.RedirectToAction(nameof(Index), "Movie");
                 }
 
                 return this.RedirectToAction(nameof(Index));
@@ -64,8 +62,8 @@
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                
-                return this.RedirectToAction(nameof(Index) , "Home");
+
+                return this.RedirectToAction(nameof(Index), "Home");
             }
         }
 
@@ -83,14 +81,13 @@
 
                 bool result = await this.watchlistService
                     .RemoveMovieFromWatchlistAsync(movieId, userId);
-
                 if (result == false)
                 {
-                    // Add JS notifications
-                    return RedirectToAction(nameof(Index));
+                    // TODO: Add JS notifications
+                    return this.RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index), "Movie");
+                return this.RedirectToAction(nameof(Index), "Movie");
             }
             catch (Exception e)
             {
@@ -101,4 +98,3 @@
         }
     }
 }
-
