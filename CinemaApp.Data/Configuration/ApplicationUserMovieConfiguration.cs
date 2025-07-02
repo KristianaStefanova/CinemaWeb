@@ -1,7 +1,6 @@
-﻿
-namespace CinemaApp.Data.Configuration
+﻿namespace CinemaApp.Data.Configuration
 {
-    using CinemaApp.Data.Models;
+    using Models;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;

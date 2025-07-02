@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 
 namespace CinemaApp.Data.Configuration
 {
@@ -27,7 +27,7 @@ namespace CinemaApp.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(GenreMaxLength);
 
-            // Define constraints for the ReleaseDate column 
+            // Define constraints for the ReleaseDate column
             entity
                 .Property(m => m.ReleaseDate)
                 .IsRequired();
@@ -61,13 +61,13 @@ namespace CinemaApp.Data.Configuration
                 .IsRequired()
                 .HasDefaultValue(false);
 
-            // Filter out only the active (non- deleted) entries
+            // Filter out only the active (non-deleted) entries
             entity
                 .HasQueryFilter(m => m.IsDeleted == false);
 
-            //Seed movies data with migration for development
-
-            entity.HasData(this.SeedMovies());
+            // Seed movies data with migration for development
+            entity
+                .HasData(this.SeedMovies());
         }
 
         public List<Movie> SeedMovies()
