@@ -1,0 +1,206 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using CinemaApp.Data.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using static CinemaApp.Data.Common.ExceptionMessages;
+
+using static CinemaApp.GCommon.ApplicationConstants;
+
+namespace CinemaApp.Data.Repository
+{
+    public abstract class BaseRepository<TEntity, TKey>
+        : IRepository<TEntity, TKey>, IAsyncRepository<TEntity, TKey>
+        where TEntity : class
+    {
+        protected readonly CinemaAppDbContext DbContext;
+        protected readonly DbSet<TEntity> DbSet;
+
+        protected BaseRepository(CinemaAppDbContext dbContext)
+        {
+            this.DbContext = dbContext;
+            this.DbSet = this.DbContext.Set<TEntity>();
+        }
+        public void Add(TEntity item)
+        {
+            this.DbSet.Add(item);
+            this.DbContext.SaveChanges();
+        }
+
+        public async Task AddAsync(TEntity item)
+        {
+            await this.DbSet.AddAsync(item);
+            await this.DbContext.SaveChangesAsync();
+
+        }
+
+        public void AddRange(IEnumerable<TEntity> items)
+        {
+            this.DbSet.AddRange(items);
+            this.DbContext.SaveChanges();
+        }
+
+        public async Task AddRangeAsync(IEnumerable<TEntity> items)
+        {
+            await this.DbSet.AddRangeAsync(items);
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        public bool Delete(TEntity entity)
+        {
+            this.PerformSoftDeleteOfEntity(entity);
+
+            return this.Update(entity);
+        }
+
+        public Task<bool> DeleteAsync(TEntity entity)
+        {
+            this.PerformSoftDeleteOfEntity(entity);
+
+            return this.UpdateAsync(entity);
+        }
+
+
+        public TEntity? FirstOrDefault(Func<TEntity, bool> predicate)
+        {
+            return this.DbSet.FirstOrDefault(predicate);
+        }
+
+        public Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return this.DbSet.FirstOrDefaultAsync(predicate);
+        }
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return this.DbSet.ToArray();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            TEntity[]? entities = await this.DbSet.ToArrayAsync();
+
+            return entities;
+        }
+
+        public IQueryable<TEntity> GetAllAttached()
+        {
+            return this.DbSet.AsQueryable();
+        }
+
+        public TEntity? GetById(TKey id)
+        {
+            return this.DbSet.Find(id);
+        }
+
+        public ValueTask<TEntity?> GetByIdAsync(TKey id)
+        {
+            return DbSet.FindAsync(id);
+        }
+
+        public bool HardDelete(TEntity entity)
+        {
+            this.DbSet.Remove(entity);
+
+            int updateCount = this.DbContext.SaveChanges();
+
+            return updateCount > 0;
+        }
+
+        public async Task<bool> HardDeleteAsync(TEntity entity)
+        {
+            this.DbSet.Remove(entity);
+
+            int updateCount = await this.DbContext.SaveChangesAsync();
+
+            return updateCount > 0;
+        }
+
+        public void SaveChanges()
+        {
+            this.DbContext.SaveChanges();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        public Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return this.DbSet.SingleOrDefaultAsync(predicate);
+        }
+
+        public TEntity? SinglesOrDefault(Func<TEntity, bool> predicate)
+        {
+            return this.DbSet.SingleOrDefault(predicate);
+        }
+
+        public bool Update(TEntity item)
+        {
+            try
+            {
+                this.DbSet.Attach(item);
+                this.DbSet.Entry(item).State = EntityState.Modified;
+                this.DbContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateAsync(TEntity item)
+        {
+            try
+            {
+                this.DbSet.Attach(item);
+                this.DbSet.Entry(item).State = EntityState.Modified;
+                await this.DbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void PerformSoftDeleteOfEntity(TEntity entity)
+        {
+            PropertyInfo? isDeletedProperty = this.GetIsDeletedProperty(entity);
+
+            if (isDeletedProperty == null)
+            {
+                throw new InvalidOperationException(SoftDeleteOnNonSoftDeletableEntity);
+            }
+
+            isDeletedProperty.SetValue(entity, true);
+        }
+
+        private PropertyInfo? GetIsDeletedProperty(TEntity entity)
+        {
+            return typeof(TEntity)
+                .GetProperties()
+                .FirstOrDefault(pi => pi.PropertyType== typeof(bool) && 
+                                pi.Name == IsDeletedPropertyName);
+        }
+
+        public int Count()
+        {
+            return this.DbSet.Count();
+        }
+
+        public Task<int> CountAsync()
+        {
+            return this.DbSet.CountAsync();
+        }
+    }
+}
