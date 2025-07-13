@@ -5,6 +5,8 @@ namespace CinemaApp.Web
     using CinemaApp.Data.Repository.Interfaces;
     using CinemaApp.Services.Core;
     using CinemaApp.Services.Core.Interfaces;
+    using CinemaApp.Web.Infrastructure.Extensions;
+    using CinemaApp.Web.Infrastructure.Middlewares;
     using Data;
 
     using Microsoft.AspNetCore.Identity;
@@ -46,9 +48,11 @@ namespace CinemaApp.Web
 
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
             builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
+            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IWatchlistService, WatchlistService>();
+            builder.Services.AddScoped<IManagerService, ManagerService>();
 
             builder.Services.AddControllersWithViews();
 
@@ -73,6 +77,7 @@ namespace CinemaApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseManagerAccessRestriction();
 
             app.MapControllerRoute(
                 name: "default",
