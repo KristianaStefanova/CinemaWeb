@@ -32,13 +32,9 @@
                 .HasMaxLength(ShowtimeMaxLength);
 
             entity
-                .HasQueryFilter(cm => cm.IsDeleted == false);
-
-            entity
-                .HasQueryFilter(cm => cm.Movie.IsDeleted == false);
-
-            entity
-                .HasQueryFilter(cm => cm.Cinema.IsDeleted == false);
+                .HasQueryFilter(cm => cm.IsDeleted == false &&
+                                                cm.Movie.IsDeleted == false &&
+                                                cm.Cinema.IsDeleted == false);
 
             entity
                 .HasOne(cm => cm.Movie)
@@ -51,6 +47,8 @@
                 .WithMany(c => c.CinemaMovies)
                 .HasForeignKey(cm => cm.CinemaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
         }
     }
 }

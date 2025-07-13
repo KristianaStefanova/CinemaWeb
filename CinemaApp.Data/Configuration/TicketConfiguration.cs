@@ -11,7 +11,7 @@
         public void Configure(EntityTypeBuilder<Ticket> entity)
         {
             entity
-                .HasKey(t => t.Id);
+                 .HasKey(t => t.Id);
 
             entity
                 .Property(t => t.Price)
