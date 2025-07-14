@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Page Not Found";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/errors.css" />
+}
+
+<div class="custom-404-wrapper d-flex align-items-center justify-content-center">
+    <div class="custom-404-card text-center">
+        <h1 class="custom-404-code">404</h1>
+        <h2 class="custom-404-title">Page Not Found</h2>
+        <p class="custom-404-message">
+            Sorry, the page you're looking for doesn't exist.<br />
+            It may have been moved or deleted.
+        </p>
+        <a asp-controller="Home" asp-action="Index" class="custom-404-btn">Return to Home</a>
+    </div>
+</div>

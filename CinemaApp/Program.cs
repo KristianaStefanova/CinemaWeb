@@ -60,6 +60,8 @@ namespace CinemaApp.Web
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
