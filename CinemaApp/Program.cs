@@ -42,7 +42,7 @@ namespace CinemaApp.Web
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequiredUniqueChars = 0;
-                    
+
                 })
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
 
@@ -50,9 +50,7 @@ namespace CinemaApp.Web
             builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
             builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
-            builder.Services.AddScoped<IMovieService, MovieService>();
-            builder.Services.AddScoped<IWatchlistService, WatchlistService>();
-            builder.Services.AddScoped<IManagerService, ManagerService>();
+            builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
 
             builder.Services.AddControllersWithViews();
 
