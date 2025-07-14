@@ -1,14 +1,9 @@
 namespace CinemaApp.Web
 {
-    using System.Configuration;
-    using CinemaApp.Data.Repository;
     using CinemaApp.Data.Repository.Interfaces;
-    using CinemaApp.Services.Core;
     using CinemaApp.Services.Core.Interfaces;
     using CinemaApp.Web.Infrastructure.Extensions;
-    using CinemaApp.Web.Infrastructure.Middlewares;
     using Data;
-
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     public class Program
@@ -46,10 +41,7 @@ namespace CinemaApp.Web
                 })
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
 
-            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-            builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
-
+            builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
 
             builder.Services.AddControllersWithViews();
