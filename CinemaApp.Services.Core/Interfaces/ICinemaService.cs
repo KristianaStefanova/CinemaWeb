@@ -10,5 +10,7 @@ namespace CinemaApp.Services.Core.Interfaces
     public interface ICinemaService
     {
         Task<IEnumerable<UsersCinemaIndexViewModel>> GetAllCinemasUserViewAsync();
+
+        Task<CinemaProgramViewModel?> GetCinemaProgramAsync(string? cinemaId);
     }
 }

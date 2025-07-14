@@ -1,4 +1,5 @@
-﻿using CinemaApp.Data.Repository.Interfaces;
+﻿using CinemaApp.Data.Models;
+using CinemaApp.Data.Repository.Interfaces;
 using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.ViewModels.Cinema;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CinemaApp.GCommon.ApplicationConstants;
+
 
 namespace CinemaApp.Services.Core
 {
@@ -30,6 +33,41 @@ namespace CinemaApp.Services.Core
                 .ToArrayAsync();
 
             return allCinemasUsersView;
+        }
+
+        public async Task<CinemaProgramViewModel?> GetCinemaProgramAsync(string? cinemaId)
+        {
+            CinemaProgramViewModel? cinemaProgram = null;
+            if (!String.IsNullOrWhiteSpace(cinemaId))
+            {
+                Cinema? cinema = await this.cinemaRepository
+                    .GetAllAttached()
+                    .Include(c => c.CinemaMovies)
+                    .ThenInclude(cm => cm.Movie)
+                    .SingleOrDefaultAsync(c => c.Id.ToString().ToLower() == cinemaId.ToLower());
+
+                if (cinema != null)
+                {
+                    cinemaProgram = new CinemaProgramViewModel()
+                    {
+                        CinemaId = cinema.Id.ToString(),
+                        CinemaName = cinema.Name,
+                        CinemaData = cinema.Name + " - " + cinema.Location,
+                        Movies = cinema.CinemaMovies
+                        .Select(cm => cm.Movie)
+                        .Select(m => new CinemaProgramMovieViewModel()
+                        {
+                            Id = m.Id.ToString(),
+                            Title = m.Title,
+                            ImageUrl = m.ImageUrl ?? $"/images/{NoImageUrl}",
+                            Director = m.Director
+                        })
+                        .ToArray()
+                    };
+                }
+            }
+            return cinemaProgram;
+
         }
     }
 }

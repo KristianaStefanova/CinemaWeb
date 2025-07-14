@@ -17,16 +17,43 @@ namespace CinemaApp.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<UsersCinemaIndexViewModel> allCinemasUserView = await this.cinemaService
+            try
+            {
+                IEnumerable<UsersCinemaIndexViewModel> allCinemasUserView = await this.cinemaService
                  .GetAllCinemasUserViewAsync();
 
-            return View(allCinemasUserView);
+                return View(allCinemasUserView);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
+            
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Program(string? id)
         {
-            
+            try
+            {
+                CinemaProgramViewModel? cinemaProgram = await this.cinemaService
+                .GetCinemaProgramAsync(id);
+                if (cinemaProgram == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return View(cinemaProgram);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
         }
     }
 }
