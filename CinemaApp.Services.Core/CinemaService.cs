@@ -35,7 +35,7 @@ namespace CinemaApp.Services.Core
             return allCinemasUsersView;
         }
 
-        
+
 
         public async Task<CinemaProgramViewModel?> GetCinemaProgramAsync(string? cinemaId)
         {
@@ -57,6 +57,7 @@ namespace CinemaApp.Services.Core
                         CinemaData = cinema.Name + " - " + cinema.Location,
                         Movies = cinema.CinemaMovies
                         .Select(cm => cm.Movie)
+                        .DistinctBy(m => m.Id)
                         .Select(m => new CinemaProgramMovieViewModel()
                         {
                             Id = m.Id.ToString(),
@@ -83,7 +84,7 @@ namespace CinemaApp.Services.Core
                     .Include(c => c.CinemaMovies)
                     .ThenInclude(cm => cm.Movie)
                     .SingleOrDefaultAsync(c => c.Id.ToString().ToLower() == cinemaId.ToLower());
-                if(cinema != null)
+                if (cinema != null)
                 {
                     cinemaDetails = new CinemaDetailsViewModel()
                     {
@@ -91,6 +92,7 @@ namespace CinemaApp.Services.Core
                         Location = cinema.Location,
                         Movies = cinema.CinemaMovies
                         .Select(cm => cm.Movie)
+                        .DistinctBy(m => m.Id)
                         .Select(m => new CinemaDetailsMovieViewModel()
                         {
                             Title = m.Title,
@@ -100,7 +102,7 @@ namespace CinemaApp.Services.Core
                     };
                 }
             }
-            return cinemaDetails;   
+            return cinemaDetails;
         }
     }
 }
