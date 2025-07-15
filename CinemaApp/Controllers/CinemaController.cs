@@ -55,5 +55,29 @@ namespace CinemaApp.Web.Controllers
                 return this.RedirectToAction(nameof(Index));
             }
         }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                CinemaDetailsViewModel? cinemaProgram = await this.cinemaService
+                .GetCinemaDetailsAsync(id);
+                if (cinemaProgram == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return View(cinemaProgram);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
     }
 }
