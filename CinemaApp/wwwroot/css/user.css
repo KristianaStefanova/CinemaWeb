@@ -1,4 +1,4 @@
-﻿html body {
+﻿﻿html, body {
     background-color: #4a4a4a;
     color: white;
     min-height: 100vh;
@@ -16,7 +16,7 @@
     padding-bottom: 40px;
 }
 
-h1, label{
+h1, label {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
@@ -29,8 +29,8 @@ h1, label{
     transform: scale(1.05);
 }
 
-.movie-card-ing-top {
-    height : 400px !important;
+.movie-card-img-top {
+    height: 400px !important;
     width: 100% !important;
     object-fit: cover !important;
     border-radius: 8px 8px 0 0 !important;
@@ -42,13 +42,13 @@ h1, label{
     transition: background 0.3s ease-in-out;
 }
 
-#loadMore:hover {
+#loadMoreBtn:hover {
     background: #e63946;
 }
 
 .btn-secondary {
     background: #6c757d;
-    border:none;
+    border: none;
     transition: background 0.3s ease-in-out;
 }
 
@@ -65,13 +65,13 @@ h1, label{
     transition: background 0.3s ease-in-out, transform 0.2s;
 }
 
-.cinema-index-card .btn:hover, .cinema-program-card .btn:active {
+.cinema-index-card .btn:hover, .cinema-program-card .btn:hover {
     background-color: #57657a;
     transform: scale(1.05);
 }
 
 .cinema-index-card .btn:active, .cinema-program-card .btn:active {
-    background: #8fa8cb;
+    background-color: #8fa8cb;
     transform: scale(0.98);
 }
 
@@ -86,26 +86,26 @@ thead.bg-primary th {
     background-color: #004085 !important;
 }
 
-.table-striped tbody tr:nth-of-type(odd){
+.table-striped tbody tr:nth-of-type(odd) {
     background-color: #2c2c2c !important;
 }
 
-.text-success{
+.text-success {
     font-weight: bold;
     color: #28a745 !important;
 }
 
-.text-warning{
+.text-warning {
     font-weight: bold;
     font-size: 1.1rem;
     color: #ffc107 !important;
 }
 
-.h1, table th{
+h1, .table th {
     color: white !important;
 }
 
-.tickets-container{
+.tickets-container {
     background: linear-gradient(to bottom, #1a1a1a, #2c2c2c);
     padding: 20px;
     border-radius: 10px;
@@ -113,14 +113,13 @@ thead.bg-primary th {
 }
 
 .back-btn {
-   
     background: #6c757d;
     color: white;
     font-weight: bold;
     transition: background 0.3s ease-in-out;
 }
 
-.back-btn:hover{
+.back-btn:hover {
     background: #5a6268;
 }
 
@@ -138,7 +137,7 @@ thead.bg-primary th {
     transform: scale(1.05);
 }
 
-.btn-outline-warning{
+.btn-outline-warning {
     border: 2px solid #ffc107 !important;
     color: #ffffff !important;
     background-color: #ffc107 !important;
@@ -150,4 +149,23 @@ thead.bg-primary th {
     background-color: #e0a800 !important;
     border-color: #e0a800 !important;
     transform: scale(1.05);
+}
+
+.showtime-box {
+    display: inline-block;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.showtime-box:hover {
+    transform: scale(1.05);
+    background-color: #34495e;
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Data.Repository.Interfaces
 {
-    internal interface ITicketRepository
+    public interface ITicketRepository
         : IRepository<Ticket, Guid>, IAsyncRepository<Ticket, Guid>
     {
     }
