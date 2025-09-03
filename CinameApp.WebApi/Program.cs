@@ -5,6 +5,7 @@ using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static CinemaApp.GCommon.ApplicationConstants;
 
 namespace CinameApp.WebApi
 {
@@ -28,6 +29,18 @@ namespace CinameApp.WebApi
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(AllowAllDomainsPolicy, policyBuilder =>
+                {
+                    policyBuilder
+                    .WithOrigins("https://localhost:7180")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+                });
+            });
+
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -44,6 +57,8 @@ namespace CinameApp.WebApi
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(AllowAllDomainsPolicy);
 
             app.UseAuthorization();
 

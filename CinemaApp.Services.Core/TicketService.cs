@@ -1,4 +1,5 @@
-﻿using CinemaApp.Data.Repository;
+﻿using CinemaApp.Data.Models;
+using CinemaApp.Data.Repository;
 using CinemaApp.Data.Repository.Interfaces;
 using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.ViewModels.Ticket;
@@ -10,11 +11,48 @@ namespace CinemaApp.Services.Core
     public class TicketService : ITicketService
     {
         private readonly ITicketRepository ticketRepository;
+        private readonly ICinemaMovieRepository cinemaMovieRepository;
 
-        public TicketService(ITicketRepository ticketRepository)
+        public TicketService(ITicketRepository ticketRepository, ICinemaMovieRepository cinemaMovieRepository)
         {
             this.ticketRepository = ticketRepository;
+            this.cinemaMovieRepository = cinemaMovieRepository;
         }
+
+        public async Task<bool> AddTicketAsync(string? cinemaId, string? movieId, int quantity, string? showtime, string? userId)
+        {
+            bool result = false;
+
+            if(!String.IsNullOrWhiteSpace(cinemaId) &&
+                !String.IsNullOrWhiteSpace(movieId) &&
+                !String.IsNullOrWhiteSpace(showtime) &&
+                !String.IsNullOrWhiteSpace(userId) &&
+                quantity > 0)
+            {
+                CinemaMovie? projection = await this.cinemaMovieRepository
+                    .SingleOrDefaultAsync(cm => cm.CinemaId.ToString().ToLower() == cinemaId.ToLower() &&
+                                            cm.MovieId.ToString().ToLower() == movieId.ToLower() &&
+                                            cm.Showtime.ToLower() == showtime.ToLower());
+                    
+                if (projection != null && projection.AvailableTickets >= quantity)
+                {
+                    Ticket newTicket = new Ticket()
+                    {
+                        Quantity = quantity,
+                        CinemaMovieProjection = projection,
+                        UserId = userId,
+                        Price = 5,
+                    };
+                    await this.ticketRepository.AddAsync(newTicket);
+
+                    projection.AvailableTickets -= quantity;
+                    result = await this.cinemaMovieRepository.UpdateAsync(projection);
+                }
+            }
+
+            return result;
+        }
+
         public async Task<IEnumerable<TicketIndexViewModel>> GetUserTicketsAsync(string? userId)
         {
             IEnumerable<TicketIndexViewModel> userTickets = new List<TicketIndexViewModel>();
