@@ -1,11 +1,6 @@
 ﻿using CinemaApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CinemaApp.Data.Configuration
 {
@@ -22,7 +17,7 @@ namespace CinemaApp.Data.Configuration
 
             entity
                 .HasOne(m => m.User)
-                .WithOne()
+                .WithOne(u => u.Manager)
                 .HasForeignKey<Manager>(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

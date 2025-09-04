@@ -24,7 +24,7 @@
                 .GetAllAttached()
                 .Include(aum => aum.Movie)
                 .AsNoTracking()
-                .Where(aum => aum.ApplicationUserId.ToLower() == userId.ToLower())
+                .Where(aum => aum.ApplicationUserId.ToString().ToLower() == userId.ToLower())
                 .Select(aum => new WatchlistViewModel()
                 {
                     MovieId = aum.MovieId.ToString(),
@@ -49,7 +49,7 @@
                     ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
                         .GetAllAttached()
                         .IgnoreQueryFilters()
-                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
+                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToString().ToLower() == userId &&
                                                      aum.MovieId.ToString() == movieGuid.ToString());
                     if (userMovieEntry != null)
                     {
@@ -83,7 +83,7 @@
                 if (isMovieIdValid)
                 {
                     ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
-                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
+                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToString().ToLower() == userId &&
                                                      aum.MovieId.ToString() == movieGuid.ToString());
                     if (userMovieEntry != null)
                     {
@@ -105,7 +105,7 @@
                 if (isMovieIdValid)
                 {
                     ApplicationUserMovie? userMovieEntry = await this.watchlistRepository
-                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToLower() == userId &&
+                        .SingleOrDefaultAsync(aum => aum.ApplicationUserId.ToString().ToLower() == userId &&
                                                      aum.MovieId.ToString() == movieGuid.ToString());
                     if (userMovieEntry != null)
                     {

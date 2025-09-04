@@ -41,7 +41,7 @@ namespace CinemaApp.Services.Core
             {
                 result = await this.managerRepository
                     .GetAllAttached()
-                    .AnyAsync(m => m.UserId.ToLower() == userId.ToLower());
+                    .AnyAsync(m => m.UserId.ToString().ToLower() == userId.ToLower());
             }
             return result;
         }
@@ -53,7 +53,7 @@ namespace CinemaApp.Services.Core
             if (!String.IsNullOrWhiteSpace(userId))
             {
                Manager? manager = await this.managerRepository
-                    .FirstOrDefaultAsync(m => m.UserId.ToLower() == userId.ToLower());
+                    .FirstOrDefaultAsync(m => m.UserId.ToString().ToLower() == userId.ToLower());
 
                 if(manager != null)
                 {

@@ -11,7 +11,7 @@ namespace CinemaApp.Data.Models
     [Comment("Manager in the system")]
     public class Manager
     {
-        [Comment("Manager's identifier")]
+        [Comment("Manager identifier")]
         public Guid Id { get; set; }
 
         public bool IsDeleted { get; set; }
@@ -19,9 +19,9 @@ namespace CinemaApp.Data.Models
         [Comment("Manager's user entity")]
         public string UserId { get; set; } = null!;
 
-        public virtual IdentityUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
-        public virtual ICollection<Cinema> ManagedCinema { get; set; }
-        = new HashSet<Cinema>();
+        public virtual ICollection<Cinema> ManagedCinemas { get; set; }
+            = new HashSet<Cinema>();
     }
 }

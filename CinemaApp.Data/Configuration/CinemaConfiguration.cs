@@ -29,7 +29,7 @@
 
             entity
                 .HasOne(c => c.Manager)
-                .WithMany(m => m.ManagedCinema)
+                .WithMany(m => m.ManagedCinemas)
                 .HasForeignKey(c => c.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
 

@@ -1,5 +1,6 @@
 
 using CinemaApp.Data;
+using CinemaApp.Data.Models;
 using CinemaApp.Data.Repository.Interfaces;
 using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.Infrastructure.Extensions;
@@ -10,7 +11,7 @@ using static CinemaApp.GCommon.ApplicationConstants;
 namespace CinameApp.WebApi
 {
     public class Program
-    {
+    {   
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,7 @@ namespace CinameApp.WebApi
                     options.UseSqlServer(connectionString);
                 });
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+            builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
 
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
@@ -62,7 +63,7 @@ namespace CinameApp.WebApi
 
             app.UseAuthorization();
 
-            app.MapIdentityApi<IdentityUser>();
+            app.MapIdentityApi<ApplicationUser>();
             app.MapControllers();
 
             app.Run();

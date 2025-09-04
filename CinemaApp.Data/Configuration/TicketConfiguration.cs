@@ -5,13 +5,12 @@
 
     using Models;
     using static GCommon.ApplicationConstants;
-
     public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         public void Configure(EntityTypeBuilder<Ticket> entity)
         {
             entity
-                 .HasKey(t => t.Id);
+                .HasKey(t => t.Id);
 
             entity
                 .Property(t => t.Price)
@@ -28,7 +27,7 @@
 
             entity
                 .HasOne(t => t.User)
-                .WithMany()
+                .WithMany(u => u.Tickets)
                 .HasForeignKey(t => t.UserId);
 
             entity
