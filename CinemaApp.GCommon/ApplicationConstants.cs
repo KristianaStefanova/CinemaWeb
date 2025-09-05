@@ -15,5 +15,10 @@
         public const string ManagerAuthCookie = "ManagerAuth";
 
         public const string AllowAllDomainsPolicy = "AllowAllDomainsDebug";
+
+        public const string UserRoleName = "User";
+
+        public const string AdminRoleName = "Admin";
+
     }
 }
