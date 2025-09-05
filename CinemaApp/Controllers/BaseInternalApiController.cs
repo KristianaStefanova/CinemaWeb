@@ -4,7 +4,6 @@ using System.Security.Claims;
 
 namespace CinemaApp.Web.Controllers
 {
-
     [ApiController]
     [Authorize]
     [Route("/api/internal/[controller]")]

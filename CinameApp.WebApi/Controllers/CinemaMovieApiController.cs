@@ -1,13 +1,12 @@
 ﻿using CinemaApp.Services.Core.Interfaces;
+using CinemaApp.WebApi.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace CinameApp.WebApi.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class CinemaMovieApiController : ControllerBase
+    public class CinemaMovieApiController : BaseExternalApiController
     {
         private readonly IProjectionService projectionService;
 
@@ -15,13 +14,14 @@ namespace CinameApp.WebApi.Controllers
         {
             this.projectionService = projectionService;
         }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("Showtimes")]
-        public async Task<ActionResult<IEnumerable<string>>> GetProjectionShowtimes([Required]string cinemaId, [Required]string movieId)
+        public async Task<ActionResult<IEnumerable<string>>> GetProjectionShowtimes([Required] string cinemaId, [Required] string movieId)
         {
-           IEnumerable<string> showtimes = await this.projectionService
+            IEnumerable<string> showtimes = await this.projectionService
                 .GetProjectionShowtimesAsync(cinemaId, movieId);
 
             return this.Ok(showtimes);
@@ -34,10 +34,10 @@ namespace CinameApp.WebApi.Controllers
         public async Task<ActionResult<int>> GetAvailableTickets([Required] string cinemaId,
             [Required] string movieId, [Required] string showtime)
         {
-            int avalibleTickets = await this.projectionService
+            int availableTickets = await this.projectionService
                 .GetAvailableTicketsCountAsync(cinemaId, movieId, showtime);
 
-            return this.Ok(avalibleTickets);
+            return this.Ok(availableTickets);
         }
     }
 }

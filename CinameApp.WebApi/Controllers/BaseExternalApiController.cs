@@ -3,7 +3,6 @@ using System.Security.Claims;
 
 namespace CinemaApp.WebApi.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
     public abstract class BaseExternalApiController : ControllerBase

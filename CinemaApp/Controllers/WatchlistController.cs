@@ -1,10 +1,9 @@
-﻿namespace CinemaApp.Web.Controllers
+﻿using CinemaApp.Services.Core.Interfaces;
+using CinemaApp.Web.ViewModels.Watchlist;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CinemaApp.Web.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-
-    using Services.Core.Interfaces;
-    using ViewModels.Watchlist;
-
     public class WatchlistController : BaseController
     {
         private readonly IWatchlistService watchlistService;

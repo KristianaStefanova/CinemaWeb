@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace CinemaApp.WebApi.Controllers
 {
-    public class TicketApiController : ControllerBase
+    public class TicketApiController : BaseExternalApiController
     {
         private readonly ITicketService ticketService;
 
@@ -33,29 +33,6 @@ namespace CinemaApp.WebApi.Controllers
             }
 
             return this.Ok();
-        }
-
-        private bool IsUserAuthenticated()
-        {
-            bool retRes = false;
-            if (this.User.Identity != null)
-            {
-                retRes = this.User.Identity.IsAuthenticated;
-            }
-
-            return retRes;
-        }
-
-        private string? GetUserId()
-        {
-            string? userId = null;
-            if (this.IsUserAuthenticated())
-            {
-                userId = this.User
-                    .FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-
-            return userId;
         }
     }
 }
