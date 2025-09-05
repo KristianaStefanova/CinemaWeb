@@ -38,6 +38,7 @@ namespace CinemaApp.Web
 
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
+
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
 
             builder.Services.AddControllersWithViews();
@@ -69,6 +70,12 @@ namespace CinemaApp.Web
             app.UseAuthorization();
             app.UseManagerAccessRestriction();
 
+            app.UseAdminRedurection();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area}/{controller=Home}/{action=Index}/{id?}"
+                );
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

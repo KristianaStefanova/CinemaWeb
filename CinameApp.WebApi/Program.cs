@@ -24,8 +24,16 @@ namespace CinameApp.WebApi
                     options.UseSqlServer(connectionString);
                 });
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-                .AddEntityFrameworkStores<CinemaAppDbContext>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 6;
+                })
+                .AddEntityFrameworkStores<CinemaAppDbContext>()
+                .AddDefaultTokenProviders();
 
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
@@ -61,9 +69,9 @@ namespace CinameApp.WebApi
 
             app.UseCors(AllowAllDomainsPolicy);
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapIdentityApi<ApplicationUser>();
             app.MapControllers();
 
             app.Run();

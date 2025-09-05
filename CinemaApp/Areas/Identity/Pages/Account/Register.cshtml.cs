@@ -7,16 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
-using System.Threading.Tasks;
 using CinemaApp.Data.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
+using static CinemaApp.GCommon.ApplicationConstants;
 
 namespace CinemaApp.Web.Areas.Identity.Pages.Account
 {
@@ -24,17 +19,20 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IUserStore<ApplicationUser> userStore;
         private readonly IUserEmailStore<ApplicationUser> emailStore;
         private readonly ILogger<RegisterModel> logger;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.userStore = userStore;
             emailStore = GetEmailStore();
             this.signInManager = signInManager;
@@ -53,12 +51,6 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -95,32 +87,45 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 ApplicationUser user = CreateUser();
 
                 await userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 IdentityResult result = await userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User created a new account with password.");
 
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    bool userRoleExists = await this.roleManager
+                        .RoleExistsAsync(UserRoleName);
+                    if (userRoleExists)
+                    {
+                        // This should be always the case
+                        result = await userManager
+                            .AddToRoleAsync(user, UserRoleName);
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(
+                                $"User can't be registered, because {UserRoleName} role can't be found!");
+                        }
+                    }
 
+                    await signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

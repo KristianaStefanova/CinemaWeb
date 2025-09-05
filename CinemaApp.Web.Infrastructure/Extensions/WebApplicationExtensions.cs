@@ -14,6 +14,12 @@ namespace CinemaApp.Web.Infrastructure.Extensions
             return app;
         }
 
+        public static IApplicationBuilder UseAdminRedurection(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AdminRedirectionMiddleware>();
+
+            return app;
+        }
 
         public static IApplicationBuilder SeedDefaultIdentity(this IApplicationBuilder app)
         {
