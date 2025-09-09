@@ -9,8 +9,10 @@ namespace CinemaApp.Services.Core.Admin.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserManagementIndexViewModel>> GetUserManagementBoardDataAsync(string userid);
+        Task<IEnumerable<UserManagementIndexViewModel>> GetUserManagementBoardDataAsync(string userId);
 
         Task<IEnumerable<string>> GetManagerEmailsAsync();
+
+        Task<bool> AssignUserToRoleAsync(RoleSelectionInputModel inputModel);
     }
 }
