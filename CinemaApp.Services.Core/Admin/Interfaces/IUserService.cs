@@ -10,5 +10,7 @@ namespace CinemaApp.Services.Core.Admin.Interfaces
     public interface IUserService
     {
         Task<IEnumerable<UserManagementIndexViewModel>> GetUserManagementBoardDataAsync(string userid);
+
+        Task<IEnumerable<string>> GetManagerEmailsAsync();
     }
 }

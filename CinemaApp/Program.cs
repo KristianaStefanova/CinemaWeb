@@ -6,6 +6,7 @@ using CinemaApp.Data.Seeding.Interfaces;
 using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Web
