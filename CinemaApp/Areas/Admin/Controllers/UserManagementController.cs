@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Services.Core.Admin.Interfaces;
 using CinemaApp.Web.ViewModels.Admin.UserManagement;
 using Microsoft.AspNetCore.Mvc;
+using static CinemaApp.GCommon.ApplicationConstants;
 
 namespace CinemaApp.Web.Areas.Admin.Controllers
 {
@@ -22,23 +23,23 @@ namespace CinemaApp.Web.Areas.Admin.Controllers
             return View(allUsers);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> AssignRole(RoleSelectionInputModel inputModel)
-        //{
-        //    try
-        //    {
-        //        await this.userService
-        //            .AssignUserToRoleAsync(inputModel);
-        //        TempData[SuccessMessageKey] = "User assigned to role successfully!";
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(RoleSelectionInputModel inputModel)
+        {
+            try
+            {
+                await this.userService
+                    .AssignUserToRoleAsync(inputModel);
+                TempData[SuccessMessageKey] = "User assigned to role successfully!";
 
-        //        return this.RedirectToAction(nameof(Index));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        TempData[ErrorMessageKey] = e.Message;
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                TempData[ErrorMessageKey] = e.Message;
 
-        //        return this.RedirectToAction(nameof(Index));
-        //    }
-        //}
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

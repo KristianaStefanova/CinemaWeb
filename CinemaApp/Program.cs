@@ -6,7 +6,6 @@ using CinemaApp.Data.Seeding.Interfaces;
 using CinemaApp.Services.Core.Interfaces;
 using CinemaApp.Web.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Web
@@ -17,16 +16,15 @@ namespace CinemaApp.Web
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+                                        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+            // TODO: Implement extension methods for adding DbContext, Identity
             builder.Services
                 .AddDbContext<CinemaAppDbContext>(options =>
                 {
                     options.UseSqlServer(connectionString);
                 });
-
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services
@@ -40,11 +38,12 @@ namespace CinemaApp.Web
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
 
+            // TODO: Implement as extension method
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
 
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -71,12 +70,11 @@ namespace CinemaApp.Web
             app.UseAuthorization();
             app.UseManagerAccessRestriction();
 
-            app.UseAdminRedurection();
+            app.UserAdminRedirection();
 
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area}/{controller=Home}/{action=Index}/{id?}"
-                );
+                pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

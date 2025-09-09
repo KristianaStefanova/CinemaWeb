@@ -1,4 +1,3 @@
-
 using CinemaApp.Data;
 using CinemaApp.Data.Models;
 using CinemaApp.Data.Repository.Interfaces;
@@ -8,32 +7,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static CinemaApp.GCommon.ApplicationConstants;
 
-namespace CinameApp.WebApi
+namespace CinemaApp.WebApi
 {
     public class Program
-    {   
+    {
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                                      throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            builder.Services
-                .AddDbContext<CinemaAppDbContext>(options =>
-                {
-                    options.UseSqlServer(connectionString);
-                });
+            builder.Services.AddDbContext<CinemaAppDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-                {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 6;
-                })
-                .AddEntityFrameworkStores<CinemaAppDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<CinemaAppDbContext>();
 
             builder.Services.AddRepositories(typeof(IMovieRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IMovieService).Assembly);
@@ -43,10 +34,10 @@ namespace CinameApp.WebApi
                 options.AddPolicy(AllowAllDomainsPolicy, policyBuilder =>
                 {
                     policyBuilder
-                    .WithOrigins("https://localhost:7180")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
+                        .WithOrigins("https://localhost:7180")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 });
             });
 
@@ -72,6 +63,7 @@ namespace CinameApp.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapIdentityApi<ApplicationUser>();
             app.MapControllers();
 
             app.Run();
